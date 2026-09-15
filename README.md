@@ -1,5 +1,7 @@
 # PetAiDemo
 
+> **Примечание об авторстве.** Весь код, тесты и конфигурация в этом репозитории полностью сгенерированы AI-агентом (Claude Code, Anthropic) по запросам пользователя — вручную код не писался.
+
 Демо-сервис на Spring Boot 4 — учёт ветеринарной клиники: владельцы питомцев, питомцы и их визиты к ветеринару.
 
 Проект создан как учебный пример REST CRUD + JPA-связей + маппинга Entity ↔ DTO через MapStruct.
@@ -21,15 +23,22 @@ Owner (владелец) 1 --- * Pet (питомец) 1 --- * Visit (визит 
 
 ## Быстрый старт
 
-Понадобится: JDK 21, Docker (Docker Desktop должен быть запущен).
+### Требования
+
+- JDK 21
+- **Docker Desktop должен быть запущен** — приложение само поднимет PostgreSQL из `compose.yaml` через Spring Boot Docker Compose support, вручную `docker compose up` запускать не нужно
+
+### Запуск
 
 ```bash
-git clone http://localhost:8929/root/petaidemo.git
-cd petaidemo
+git clone https://github.com/AlexNovot/PetAiDemo.git
+cd PetAiDemo
 ./mvnw spring-boot:run
 ```
 
-Postgres из `compose.yaml` поднимется автоматически (Docker Compose support), приложение стартует на `http://localhost:8081`.
+Postgres поднимется автоматически при старте, схема БД создастся сама (`spring.jpa.hibernate.ddl-auto=update`), а при первом запуске на пустую базу автоматически запишутся тестовые данные (10 владельцев, ~19 питомцев, ~10 визитов) — см. `DataSeeder`. При последующих запусках сидинг пропускается, если данные уже есть.
+
+Приложение стартует на `http://localhost:8081`.
 
 Собрать jar и запустить отдельно:
 
