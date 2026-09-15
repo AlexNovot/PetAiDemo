@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: PetAiDemo
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: secret
+  docker:
+    compose:
+      skip:
+        in-tests: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+server:
+  port: 8081
