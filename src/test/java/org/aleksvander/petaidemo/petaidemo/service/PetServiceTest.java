@@ -54,14 +54,15 @@ class PetServiceTest {
 
         pet = new Pet();
         pet.setId(10L);
+        pet.setVersion(0L);
         pet.setName("Rex");
         pet.setSpecies(Species.DOG);
         pet.setBreed("Labrador");
         pet.setBirthDate(LocalDate.of(2020, 1, 1));
         pet.setOwner(owner);
 
-        requestDto = new PetRequestDto("Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
-        responseDto = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
+        requestDto = new PetRequestDto("Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
+        responseDto = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
     }
 
     @Test
@@ -166,5 +167,24 @@ class PetServiceTest {
 
         assertThatThrownBy(() -> petService.findPetOrThrow(99L))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    void update_staleVersion_throwsOptimisticLockAndDoesNotUpdate() {
+        when(petRepository.findById(10L)).thenReturn(Optional.of(pet));
+        pet.setVersion(5L);
+
+        assertThatThrownBy(() -> petService.update(10L, requestDto))
+                .isInstanceOf(org.springframework.orm.ObjectOptimisticLockingFailureException.class);
+        verify(petMapper, never()).updateEntity(any(), any(), any());
+    }
+
+    @Test
+    void update_missingVersion_throwsVersionRequired() {
+        when(petRepository.findById(10L)).thenReturn(Optional.of(pet));
+        var noVersion = new org.aleksvander.petaidemo.petaidemo.dto.pet.PetRequestDto("Rex", Species.DOG, null, null, 1L, null);
+
+        assertThatThrownBy(() -> petService.update(10L, noVersion))
+                .isInstanceOf(org.aleksvander.petaidemo.petaidemo.exception.VersionRequiredException.class);
     }
 }

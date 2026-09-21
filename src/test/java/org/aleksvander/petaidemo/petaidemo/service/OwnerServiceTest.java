@@ -44,13 +44,14 @@ class OwnerServiceTest {
     void setUp() {
         owner = new Owner();
         owner.setId(1L);
+        owner.setVersion(0L);
         owner.setFirstName("Ivan");
         owner.setLastName("Petrov");
         owner.setEmail("ivan@example.com");
         owner.setPhone("+79001234567");
 
-        requestDto = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567");
-        responseDto = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567");
+        requestDto = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L);
+        responseDto = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L);
     }
 
     @Test
@@ -149,5 +150,24 @@ class OwnerServiceTest {
 
         assertThatThrownBy(() -> ownerService.findOwnerOrThrow(99L))
                 .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    void update_staleVersion_throwsOptimisticLockAndDoesNotUpdate() {
+        when(ownerRepository.findById(1L)).thenReturn(Optional.of(owner));
+        owner.setVersion(5L);
+
+        assertThatThrownBy(() -> ownerService.update(1L, requestDto))
+                .isInstanceOf(org.springframework.orm.ObjectOptimisticLockingFailureException.class);
+        verify(ownerMapper, never()).updateEntity(any(), any());
+    }
+
+    @Test
+    void update_missingVersion_throwsVersionRequired() {
+        when(ownerRepository.findById(1L)).thenReturn(Optional.of(owner));
+        var noVersion = new org.aleksvander.petaidemo.petaidemo.dto.owner.OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", null, null);
+
+        assertThatThrownBy(() -> ownerService.update(1L, noVersion))
+                .isInstanceOf(org.aleksvander.petaidemo.petaidemo.exception.VersionRequiredException.class);
     }
 }

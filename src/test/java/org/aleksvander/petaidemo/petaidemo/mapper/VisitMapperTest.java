@@ -25,7 +25,7 @@ class VisitMapperTest {
         Pet pet = new Pet();
         pet.setId(42L);
 
-        VisitRequestDto dto = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Checkup", "notes", 42L);
+        VisitRequestDto dto = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Checkup", "notes", 42L, null);
 
         Visit visit = visitMapper.toEntity(dto, pet);
 
@@ -45,7 +45,7 @@ class VisitMapperTest {
         Pet newPet = new Pet();
         newPet.setId(1L);
 
-        VisitRequestDto dto = new VisitRequestDto(LocalDate.of(2023, 3, 3), "Vaccination", "ok", 1L);
+        VisitRequestDto dto = new VisitRequestDto(LocalDate.of(2023, 3, 3), "Vaccination", "ok", 1L, null);
 
         visitMapper.updateEntity(visit, dto, newPet);
 
@@ -64,6 +64,7 @@ class VisitMapperTest {
 
         Visit visit = new Visit();
         visit.setId(100L);
+        visit.setVersion(0L);
         visit.setVisitDate(LocalDate.of(2024, 5, 1));
         visit.setDiagnosis("Checkup");
         visit.setNotes("notes");
@@ -71,6 +72,6 @@ class VisitMapperTest {
 
         VisitResponseDto dto = visitMapper.toDto(visit);
 
-        assertThat(dto).isEqualTo(new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 3L));
+        assertThat(dto).isEqualTo(new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 3L, 0L));
     }
 }

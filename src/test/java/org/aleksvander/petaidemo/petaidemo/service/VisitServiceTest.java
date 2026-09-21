@@ -53,13 +53,14 @@ class VisitServiceTest {
 
         visit = new Visit();
         visit.setId(100L);
+        visit.setVersion(0L);
         visit.setVisitDate(LocalDate.of(2024, 5, 1));
         visit.setDiagnosis("Healthy checkup");
         visit.setNotes("All good");
         visit.setPet(pet);
 
-        requestDto = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Healthy checkup", "All good", 10L);
-        responseDto = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Healthy checkup", "All good", 10L);
+        requestDto = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Healthy checkup", "All good", 10L, 0L);
+        responseDto = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Healthy checkup", "All good", 10L, 0L);
     }
 
     @Test
@@ -156,5 +157,24 @@ class VisitServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class);
 
         verify(visitRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void update_staleVersion_throwsOptimisticLockAndDoesNotUpdate() {
+        when(visitRepository.findById(100L)).thenReturn(Optional.of(visit));
+        visit.setVersion(5L);
+
+        assertThatThrownBy(() -> visitService.update(100L, requestDto))
+                .isInstanceOf(org.springframework.orm.ObjectOptimisticLockingFailureException.class);
+        verify(visitMapper, never()).updateEntity(any(), any(), any());
+    }
+
+    @Test
+    void update_missingVersion_throwsVersionRequired() {
+        when(visitRepository.findById(100L)).thenReturn(Optional.of(visit));
+        var noVersion = new org.aleksvander.petaidemo.petaidemo.dto.visit.VisitRequestDto(LocalDate.of(2024, 5, 1), null, null, 10L, null);
+
+        assertThatThrownBy(() -> visitService.update(100L, noVersion))
+                .isInstanceOf(org.aleksvander.petaidemo.petaidemo.exception.VersionRequiredException.class);
     }
 }

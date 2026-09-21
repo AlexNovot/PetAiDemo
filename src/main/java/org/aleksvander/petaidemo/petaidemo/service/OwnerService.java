@@ -4,6 +4,7 @@ import org.aleksvander.petaidemo.petaidemo.dto.owner.OwnerRequestDto;
 import org.aleksvander.petaidemo.petaidemo.dto.owner.OwnerResponseDto;
 import org.aleksvander.petaidemo.petaidemo.entity.Owner;
 import org.aleksvander.petaidemo.petaidemo.exception.ResourceNotFoundException;
+import org.aleksvander.petaidemo.petaidemo.exception.VersionChecker;
 import org.aleksvander.petaidemo.petaidemo.mapper.OwnerMapper;
 import org.aleksvander.petaidemo.petaidemo.repository.OwnerRepository;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class OwnerService {
 
     public OwnerResponseDto update(Long id, OwnerRequestDto dto) {
         Owner owner = findOwnerOrThrow(id);
+        VersionChecker.check(Owner.class, id, dto.version(), owner.getVersion());
         ownerMapper.updateEntity(owner, dto);
         return ownerMapper.toDto(owner);
     }

@@ -7,6 +7,7 @@ public record OwnerRequestDto(
         @NotBlank String firstName,
         @NotBlank String lastName,
         @NotBlank @Email String email,
-        String phone
+        String phone,
+        Long version
 ) {
 }

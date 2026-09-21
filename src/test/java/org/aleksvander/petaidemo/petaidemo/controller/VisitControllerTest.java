@@ -50,7 +50,7 @@ class VisitControllerTest {
 
     @Test
     void getAll_returnsVisitsList() throws Exception {
-        VisitResponseDto dto = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
+        VisitResponseDto dto = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, 0L);
         when(visitService.getAll()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/api/visits"))
@@ -60,7 +60,7 @@ class VisitControllerTest {
 
     @Test
     void getById_found_returnsVisit() throws Exception {
-        VisitResponseDto dto = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
+        VisitResponseDto dto = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, 0L);
         when(visitService.getById(100L)).thenReturn(dto);
 
         mockMvc.perform(get("/api/visits/100"))
@@ -78,8 +78,8 @@ class VisitControllerTest {
 
     @Test
     void create_validPayload_returns201() throws Exception {
-        VisitRequestDto request = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
-        VisitResponseDto response = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
+        VisitRequestDto request = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, null);
+        VisitResponseDto response = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, 0L);
         when(visitService.create(any(VisitRequestDto.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/visits")
@@ -91,7 +91,7 @@ class VisitControllerTest {
 
     @Test
     void create_invalidPayload_returns400() throws Exception {
-        VisitRequestDto invalid = new VisitRequestDto(null, "Checkup", "notes", null);
+        VisitRequestDto invalid = new VisitRequestDto(null, "Checkup", "notes", null, null);
 
         mockMvc.perform(post("/api/visits")
                         .contentType("application/json")
@@ -103,8 +103,8 @@ class VisitControllerTest {
 
     @Test
     void update_validPayload_returns200() throws Exception {
-        VisitRequestDto request = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
-        VisitResponseDto response = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
+        VisitRequestDto request = new VisitRequestDto(LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, null);
+        VisitResponseDto response = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, 0L);
         when(visitService.update(eq(100L), any(VisitRequestDto.class))).thenReturn(response);
 
         mockMvc.perform(put("/api/visits/100")

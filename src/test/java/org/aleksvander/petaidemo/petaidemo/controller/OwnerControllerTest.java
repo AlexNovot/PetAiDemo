@@ -56,7 +56,7 @@ class OwnerControllerTest {
 
     @Test
     void getAll_returnsOwnersList() throws Exception {
-        OwnerResponseDto dto = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567");
+        OwnerResponseDto dto = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L);
         when(ownerService.getAll()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/api/owners"))
@@ -67,7 +67,7 @@ class OwnerControllerTest {
 
     @Test
     void getById_found_returnsOwner() throws Exception {
-        OwnerResponseDto dto = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567");
+        OwnerResponseDto dto = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L);
         when(ownerService.getById(1L)).thenReturn(dto);
 
         mockMvc.perform(get("/api/owners/1"))
@@ -86,7 +86,7 @@ class OwnerControllerTest {
 
     @Test
     void getPets_returnsNestedPetsList() throws Exception {
-        PetResponseDto pet = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
+        PetResponseDto pet = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
         when(petService.getByOwner(1L)).thenReturn(List.of(pet));
 
         mockMvc.perform(get("/api/owners/1/pets"))
@@ -96,8 +96,8 @@ class OwnerControllerTest {
 
     @Test
     void create_validPayload_returns201() throws Exception {
-        OwnerRequestDto request = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567");
-        OwnerResponseDto response = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567");
+        OwnerRequestDto request = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567", null);
+        OwnerResponseDto response = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L);
         when(ownerService.create(any(OwnerRequestDto.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/owners")
@@ -109,7 +109,7 @@ class OwnerControllerTest {
 
     @Test
     void create_invalidPayload_returns400() throws Exception {
-        OwnerRequestDto invalid = new OwnerRequestDto("", "Petrov", "not-an-email", null);
+        OwnerRequestDto invalid = new OwnerRequestDto("", "Petrov", "not-an-email", null, null);
 
         mockMvc.perform(post("/api/owners")
                         .contentType("application/json")
@@ -121,8 +121,8 @@ class OwnerControllerTest {
 
     @Test
     void update_validPayload_returns200() throws Exception {
-        OwnerRequestDto request = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567");
-        OwnerResponseDto response = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567");
+        OwnerRequestDto request = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567", null);
+        OwnerResponseDto response = new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L);
         when(ownerService.update(eq(1L), any(OwnerRequestDto.class))).thenReturn(response);
 
         mockMvc.perform(put("/api/owners/1")

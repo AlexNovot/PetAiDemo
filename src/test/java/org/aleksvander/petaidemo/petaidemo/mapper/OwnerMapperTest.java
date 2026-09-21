@@ -19,7 +19,7 @@ class OwnerMapperTest {
 
     @Test
     void toEntity_mapsAllFieldsAndLeavesIdNull() {
-        OwnerRequestDto dto = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567");
+        OwnerRequestDto dto = new OwnerRequestDto("Ivan", "Petrov", "ivan@example.com", "+79001234567", null);
 
         Owner owner = ownerMapper.toEntity(dto);
 
@@ -36,7 +36,7 @@ class OwnerMapperTest {
         owner.setId(5L);
         owner.setFirstName("Old");
 
-        OwnerRequestDto dto = new OwnerRequestDto("New", "Name", "new@example.com", "+70000000000");
+        OwnerRequestDto dto = new OwnerRequestDto("New", "Name", "new@example.com", "+70000000000", null);
 
         ownerMapper.updateEntity(owner, dto);
 
@@ -51,6 +51,7 @@ class OwnerMapperTest {
     void toDto_mapsAllFields() {
         Owner owner = new Owner();
         owner.setId(1L);
+        owner.setVersion(0L);
         owner.setFirstName("Ivan");
         owner.setLastName("Petrov");
         owner.setEmail("ivan@example.com");
@@ -58,6 +59,6 @@ class OwnerMapperTest {
 
         OwnerResponseDto dto = ownerMapper.toDto(owner);
 
-        assertThat(dto).isEqualTo(new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567"));
+        assertThat(dto).isEqualTo(new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L));
     }
 }

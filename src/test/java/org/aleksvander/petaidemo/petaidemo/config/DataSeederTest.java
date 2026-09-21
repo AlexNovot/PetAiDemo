@@ -51,12 +51,12 @@ class DataSeederTest {
     void run_emptyDatabase_seedsOwnersAndPets() throws Exception {
         when(ownerRepository.count()).thenReturn(0L);
         when(ownerService.create(any(OwnerRequestDto.class)))
-                .thenReturn(new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567"));
+                .thenReturn(new OwnerResponseDto(1L, "Ivan", "Petrov", "ivan@example.com", "+79001234567", 0L));
         when(petService.create(any(PetRequestDto.class)))
                 .thenReturn(new PetResponseDto(1L, "Rex", org.aleksvander.petaidemo.petaidemo.entity.Species.DOG,
-                        "Labrador", java.time.LocalDate.of(2020, 1, 1), 1L));
+                        "Labrador", java.time.LocalDate.of(2020, 1, 1), 1L, 0L));
         when(visitService.create(any(VisitRequestDto.class)))
-                .thenReturn(new VisitResponseDto(1L, java.time.LocalDate.of(2024, 1, 1), "Checkup", "notes", 1L));
+                .thenReturn(new VisitResponseDto(1L, java.time.LocalDate.of(2024, 1, 1), "Checkup", "notes", 1L, 0L));
 
         DataSeeder seeder = new DataSeeder(ownerRepository, ownerService, petService, visitService);
 

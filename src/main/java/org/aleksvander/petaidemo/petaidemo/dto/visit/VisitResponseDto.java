@@ -7,6 +7,7 @@ public record VisitResponseDto(
         LocalDate visitDate,
         String diagnosis,
         String notes,
-        Long petId
+        Long petId,
+        Long version
 ) {
 }

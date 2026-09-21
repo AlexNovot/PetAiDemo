@@ -11,6 +11,7 @@ public record PetRequestDto(
         @NotNull Species species,
         String breed,
         LocalDate birthDate,
-        @NotNull Long ownerId
+        @NotNull Long ownerId,
+        Long version
 ) {
 }

@@ -8,6 +8,7 @@ public record VisitRequestDto(
         @NotNull LocalDate visitDate,
         String diagnosis,
         String notes,
-        @NotNull Long petId
+        @NotNull Long petId,
+        Long version
 ) {
 }

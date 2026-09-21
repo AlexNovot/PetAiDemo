@@ -92,7 +92,7 @@ public class DataSeeder implements CommandLineRunner {
 
         for (OwnerSeed ownerSeed : OWNERS) {
             OwnerResponseDto owner = ownerService.create(
-                    new OwnerRequestDto(ownerSeed.firstName(), ownerSeed.lastName(), ownerSeed.email(), ownerSeed.phone())
+                    new OwnerRequestDto(ownerSeed.firstName(), ownerSeed.lastName(), ownerSeed.email(), ownerSeed.phone(), null)
             );
 
             int petsForOwner = 1 + (petIndex % 2);
@@ -101,7 +101,7 @@ public class DataSeeder implements CommandLineRunner {
                 petIndex++;
 
                 PetResponseDto pet = petService.create(new PetRequestDto(
-                        petSeed.name(), petSeed.species(), petSeed.breed(), petSeed.birthDate(), owner.id()
+                        petSeed.name(), petSeed.species(), petSeed.breed(), petSeed.birthDate(), owner.id(), null
                 ));
                 totalPets++;
 
@@ -111,7 +111,7 @@ public class DataSeeder implements CommandLineRunner {
                     visitIndex++;
 
                     visitService.create(new VisitRequestDto(
-                            visitSeed.visitDate(), visitSeed.diagnosis(), visitSeed.notes(), pet.id()
+                            visitSeed.visitDate(), visitSeed.diagnosis(), visitSeed.notes(), pet.id(), null
                     ));
                     totalVisits++;
                 }

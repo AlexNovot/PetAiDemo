@@ -12,10 +12,12 @@ import org.mapstruct.MappingTarget;
 public interface PetMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "version", ignore = true)
     @Mapping(target = "owner", source = "owner")
     Pet toEntity(PetRequestDto dto, Owner owner);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "version", ignore = true)
     @Mapping(target = "owner", source = "owner")
     void updateEntity(@MappingTarget Pet pet, PetRequestDto dto, Owner owner);
 

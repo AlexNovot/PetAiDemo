@@ -10,6 +10,7 @@ public record PetResponseDto(
         Species species,
         String breed,
         LocalDate birthDate,
-        Long ownerId
+        Long ownerId,
+        Long version
 ) {
 }

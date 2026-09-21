@@ -5,6 +5,7 @@ import org.aleksvander.petaidemo.petaidemo.dto.pet.PetResponseDto;
 import org.aleksvander.petaidemo.petaidemo.entity.Owner;
 import org.aleksvander.petaidemo.petaidemo.entity.Pet;
 import org.aleksvander.petaidemo.petaidemo.exception.ResourceNotFoundException;
+import org.aleksvander.petaidemo.petaidemo.exception.VersionChecker;
 import org.aleksvander.petaidemo.petaidemo.mapper.PetMapper;
 import org.aleksvander.petaidemo.petaidemo.repository.PetRepository;
 import org.springframework.stereotype.Service;
@@ -49,6 +50,7 @@ public class PetService {
 
     public PetResponseDto update(Long id, PetRequestDto dto) {
         Pet pet = findPetOrThrow(id);
+        VersionChecker.check(Pet.class, id, dto.version(), pet.getVersion());
         Owner owner = ownerService.findOwnerOrThrow(dto.ownerId());
         petMapper.updateEntity(pet, dto, owner);
         return petMapper.toDto(pet);

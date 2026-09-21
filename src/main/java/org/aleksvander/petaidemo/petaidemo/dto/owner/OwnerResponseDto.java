@@ -5,6 +5,7 @@ public record OwnerResponseDto(
         String firstName,
         String lastName,
         String email,
-        String phone
+        String phone,
+        Long version
 ) {
 }

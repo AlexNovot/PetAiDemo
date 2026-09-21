@@ -56,7 +56,7 @@ class PetControllerTest {
 
     @Test
     void getAll_returnsPetsList() throws Exception {
-        PetResponseDto dto = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
+        PetResponseDto dto = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
         when(petService.getAll()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/api/pets"))
@@ -66,7 +66,7 @@ class PetControllerTest {
 
     @Test
     void getById_found_returnsPet() throws Exception {
-        PetResponseDto dto = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
+        PetResponseDto dto = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
         when(petService.getById(10L)).thenReturn(dto);
 
         mockMvc.perform(get("/api/pets/10"))
@@ -84,7 +84,7 @@ class PetControllerTest {
 
     @Test
     void getVisits_returnsNestedVisitsList() throws Exception {
-        VisitResponseDto visit = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L);
+        VisitResponseDto visit = new VisitResponseDto(100L, LocalDate.of(2024, 5, 1), "Checkup", "notes", 10L, 0L);
         when(visitService.getByPet(10L)).thenReturn(List.of(visit));
 
         mockMvc.perform(get("/api/pets/10/visits"))
@@ -94,8 +94,8 @@ class PetControllerTest {
 
     @Test
     void create_validPayload_returns201() throws Exception {
-        PetRequestDto request = new PetRequestDto("Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
-        PetResponseDto response = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
+        PetRequestDto request = new PetRequestDto("Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, null);
+        PetResponseDto response = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
         when(petService.create(any(PetRequestDto.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/pets")
@@ -107,7 +107,7 @@ class PetControllerTest {
 
     @Test
     void create_invalidPayload_returns400() throws Exception {
-        PetRequestDto invalid = new PetRequestDto("", null, "Labrador", LocalDate.of(2020, 1, 1), null);
+        PetRequestDto invalid = new PetRequestDto("", null, "Labrador", LocalDate.of(2020, 1, 1), null, null);
 
         mockMvc.perform(post("/api/pets")
                         .contentType("application/json")
@@ -120,8 +120,8 @@ class PetControllerTest {
 
     @Test
     void update_validPayload_returns200() throws Exception {
-        PetRequestDto request = new PetRequestDto("Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
-        PetResponseDto response = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L);
+        PetRequestDto request = new PetRequestDto("Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, null);
+        PetResponseDto response = new PetResponseDto(10L, "Rex", Species.DOG, "Labrador", LocalDate.of(2020, 1, 1), 1L, 0L);
         when(petService.update(eq(10L), any(PetRequestDto.class))).thenReturn(response);
 
         mockMvc.perform(put("/api/pets/10")
